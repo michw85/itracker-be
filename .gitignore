@@ -1,0 +1,64 @@
+# =========================
+# Gradle
+# =========================
+.gradle/                              # Gradle local cache
+build/                                # Top-level build output
+**/build/                             # Build output in any submodule
+!gradle/wrapper/gradle-wrapper.jar    # Keep the Gradle wrapper JAR
+!gradle/wrapper/gradle-wrapper.properties # Keep wrapper properties
+gradlew                               # Gradle wrapper script (Linux/Mac)
+gradlew.bat                           # Gradle wrapper script (Windows)
+
+# =========================
+# Eclipse / STS
+# =========================
+.apt_generated/                       # annotation processors
+.classpath
+.factorypath
+.project
+.settings/                            # IDE settings
+.springBeans
+.sts4-cache                           # STS cache
+bin/                                  # Eclipse output
+**/bin/                               # module-level bin dirs
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea/                                # project settings
+*.iws                                 # IDEA workspace
+*.iml                                 # module files
+*.ipr                                 # project files
+out/                                  # IntelliJ build output
+**/out/                               # module-level out dirs
+
+# =========================
+# NetBeans
+# =========================
+nbproject/private/                    # user-specific NB settings
+nbbuild/                              # NB build output
+dist/                                 # NB distribution
+nbdist/
+.nb-gradle/                           # NB-Gradle integration
+
+# =========================
+# Visual Studio Code
+# =========================
+.vscode/                              # VS Code settings
+
+# =========================
+# OS generated files
+# =========================
+.DS_Store                             # macOS Finder
+Thumbs.db                             # Windows Explorer
+
+# =========================
+# Logs and temporary
+# =========================
+*.log                                 # log files
+*.tmp                                 # temp files
+
+# =========================
+# Custom
+# =========================
+.fastRequest/

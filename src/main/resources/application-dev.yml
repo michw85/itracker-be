@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: Task Tracker
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3307}/${DB_NAME:task_tracker}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  mail:
+    username: ${EMAIL_USERNAME:fake}
+    password: ${EMAIL_PASSWORD:fake}
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        #        debug: true
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            protocols: TLSv1.2
+            trust: smtp.gmail.com
+
+logging:
+  level:
+    #    root: debug
+    org.hibernate.SQL: DEBUG
+
+confirmation:
+  expiration:
+    days: ${CONFIRMATION_EXPIRATION_DAYS:5}
+
+app:
+  base-url: ${BASE_URL:http://localhost:8080}
+
+digitalocean:
+  spaces:
+    access-key: ${DO_SPACES_ACCESS_KEY:fake}
+    secret-key: ${DO_SPACES_SECRET_KEY:fake}
+    endpoint: ${DO_SPACES_ENDPOINT:https://fra1.digitaloceanspaces.com}
+    region: ${DO_SPACES_REGION:fra1}
+    bucket-name: ${DO_SPACES_BUCKET:test-bucket}
+
+
+#1 day = 1440min
+#7 day = 10080min
+jwt:
+  at:
+    live-in-min: ${JWT_AT_LIVE_IN_MIN:10}
+    secret: ${JWT_AT_SECRET:eW91ci0yNTYtYml0LXNlY3JldC1mb3ItYWNjZXNzLXRva2VuLTAxMjM0NTY3ODlhYmNkZWY=}
+  rt:
+    live-in-min: ${JWT_RT_LIVE_IN_MIN:1440}
+    secret: ${JWT_RT_SECRET:eW91ci0yNTYtYml0LXNlY3JldC1mb3ItcmVmcmVzaC10b2tlbi1hYmNkZWYwMTIzNDU2Nzg5}
+
+springdoc:
+  swagger-ui:
+    with-credentials: true
