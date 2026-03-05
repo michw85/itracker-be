@@ -22,7 +22,7 @@ public class EmailService {
 
     @Async
     public void sendConfirmationEmail(String sentTo, String confirmationCode) {
-        String confirmationLink = "%s/confirm/%s".formatted(baseUrl, confirmationCode);
+        String confirmationLink = "%s/api/v1/users/confirm/%s".formatted(baseUrl, confirmationCode);
 
         Map<String, Object> model = Map.of(
                 "link", confirmationLink
