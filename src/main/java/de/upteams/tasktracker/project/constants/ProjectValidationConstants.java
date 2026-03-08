@@ -1,8 +1,8 @@
 package de.upteams.tasktracker.project.constants;
 
-public final class ProjectValidationConstats {
+public final class ProjectValidationConstants {
 
-    private ProjectValidationConstats() {
+    private ProjectValidationConstants() {
         throw new IllegalStateException("Utility class");
     }
 
