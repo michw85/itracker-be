@@ -1,7 +1,7 @@
 package de.upteams.tasktracker.project.entity;
 
 import de.upteams.tasktracker.collaborator.entity.Collaborator;
-import de.upteams.tasktracker.project.constants.ProjectValidationConstats;
+import de.upteams.tasktracker.project.constants.ProjectValidationConstants;
 import de.upteams.tasktracker.task.entity.Task;
 import de.upteams.tasktracker.user.entity.AppUser;
 import de.upteams.tasktracker.utils.BaseEntity;
@@ -32,9 +32,9 @@ public class Project extends BaseEntity {
 
     @Column(name = "title", nullable = false)
     @NotBlank
-    @Length(min = ProjectValidationConstats.NAME_MIN_LENGTH, max = ProjectValidationConstats.NAME_MAX_LENGTH)
+    @Length(min = ProjectValidationConstants.NAME_MIN_LENGTH, max = ProjectValidationConstants.NAME_MAX_LENGTH)
     @Pattern(
-            regexp = ProjectValidationConstats.NAME_REGEX,
+            regexp = ProjectValidationConstants.NAME_REGEX,
             message = "Project title should be at least 3 character length and start with capital letter"
     )
     private String title;

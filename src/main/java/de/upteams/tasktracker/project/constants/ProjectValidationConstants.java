@@ -1,0 +1,12 @@
+package de.upteams.tasktracker.project.constants;
+
+public final class ProjectValidationConstants {
+
+    private ProjectValidationConstants() {
+        throw new IllegalStateException("Utility class");
+    }
+
+    public static final String NAME_REGEX = "[a-zA-Z0-9 ]+";
+    public static final int NAME_MAX_LENGTH = 155;
+    public static final int NAME_MIN_LENGTH = 3;
+}
