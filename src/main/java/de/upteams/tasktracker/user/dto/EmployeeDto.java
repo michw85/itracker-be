@@ -26,7 +26,7 @@ public record EmployeeDto(
                 description = "Employee's name",
                 example = "Homer Simpson"
         )
-        String name,
+        String displayName,
 
         @Schema(
                 description = "Employee's password (will be hidden in responses)",
@@ -40,15 +40,19 @@ public record EmployeeDto(
         )
         String email,
 
+        @Schema(description = "Employee's position", example = "Developer")
+        String position,
+
         @Schema(
                 description = "URL of Employee's avatar image",
                 accessMode = Schema.AccessMode.READ_ONLY
         )
-        String avatar,
+        String avatarUrl,
 
         @Schema(
                 description = "List of Roles granted to this Employee",
                 accessMode = Schema.AccessMode.READ_ONLY
         )
         RoleDto roles) {
+
 }

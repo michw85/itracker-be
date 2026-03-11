@@ -4,6 +4,7 @@ import de.upteams.tasktracker.security.service.AuthUserDetails;
 import de.upteams.tasktracker.user.dto.request.ProfileUpdateDto;
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
 import de.upteams.tasktracker.user.service.UserProfileService;
+import de.upteams.tasktracker.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,6 +49,8 @@ public class UserProfileController {
     ) {
         return profileService.updateProfile(principal.user().getId().toString(), updateDto);
     }
+
+
 
     @Operation(summary = "Upload avatar")
     @PostMapping("/me/avatar")
