@@ -1,8 +1,11 @@
 package de.upteams.tasktracker.user.util;
 
+import de.upteams.tasktracker.user.dto.EmployeeDto;
+import de.upteams.tasktracker.user.dto.response.UserCreateResponseDto;
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
 import de.upteams.tasktracker.user.entity.AppUser;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
 /**
@@ -14,5 +17,11 @@ import org.mapstruct.MappingConstants;
 )
 public interface AppUserMapper {
 
+    @Mapping(target = "role", expression = "java(entity.getRole().name())")
     UserResponseDto mapEntityToDto(AppUser entity);
+
+    @Mapping(target = "role", expression = "java(entity.getRole().name())")
+    UserCreateResponseDto mapEntityToCreateResponseDto(AppUser entity);
+
+    EmployeeDto mapToEmployeeDto(AppUser entity);
 }

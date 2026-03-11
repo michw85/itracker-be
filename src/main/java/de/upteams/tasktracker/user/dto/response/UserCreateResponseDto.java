@@ -11,8 +11,19 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * or when a confirmation email has been resent.</p>
  */
 public record UserCreateResponseDto(
-
+        // TODO: Decide final ID format (Long vs UUID) and update example accordingly
+        @Schema(
+                description = "User's unique identifier",
+                example = "9",    // or "123e4567-e89b-12d3-a456-426614174000",
+                accessMode = Schema.AccessMode.READ_ONLY
+        )
         String id,
+
+        @Schema(
+                description = "User's display name",
+                example = "Homer Simpsons"
+        )
+        String displayName,
 
         @Schema(
                 description = "User email",

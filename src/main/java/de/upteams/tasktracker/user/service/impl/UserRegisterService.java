@@ -38,7 +38,14 @@ public class UserRegisterService {
             return handleExistingUser(foundUserByEmail.get());
         }
 
-        final AppUser appUser = new AppUser(encodedPassword, normalizedEmail);
+        final AppUser appUser;
+        // Conditionally include displayName if the optional field is present and not blank
+        if (dto.displayName() != null && !dto.displayName().isBlank()) {
+            appUser = new AppUser(encodedPassword, normalizedEmail, dto.displayName());
+        } else {
+            appUser = new AppUser(encodedPassword, normalizedEmail);
+        }
+
         final AppUser savedNewUser = userService.saveOrUpdate(appUser);
 
         String confirmationCode = confirmationService.generateConfirmationCode(savedNewUser);
@@ -46,6 +53,7 @@ public class UserRegisterService {
 
         return new UserCreateResponseDto(
                 savedNewUser.getId().toString(),
+                savedNewUser.getDisplayName(),
                 savedNewUser.getEmail(),
                 savedNewUser.getRole().name(),
                 false
@@ -59,6 +67,7 @@ public class UserRegisterService {
             emailService.sendConfirmationEmail(existingUser.getEmail(), confirmationCode);
             return new UserCreateResponseDto(
                     existingUser.getId().toString(),
+                    existingUser.getDisplayName(),
                     existingUser.getEmail(),
                     existingUser.getRole().name(),
                     true);
@@ -77,7 +86,13 @@ public class UserRegisterService {
         confirmationService.removeToken(confirmationToken);
 
         return new UserResponseDto(
+                registeredUser.getId().toString(),
+                registeredUser.getDisplayName(),
                 registeredUser.getEmail(),
+                registeredUser.getPosition(),
+                registeredUser.getDepartment(),
+                registeredUser.getAvatarUrl(),
+                registeredUser.getBio(),
                 registeredUser.getRole().name(),
                 registeredUser.getConfirmationStatus()
         );

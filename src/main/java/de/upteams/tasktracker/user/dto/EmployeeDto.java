@@ -3,7 +3,7 @@ package de.upteams.tasktracker.user.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
- * Employee DTO
+ * Employee DTO for project assignments
  *
  * @param id       Employee ID
  * @param name     Employee's name
@@ -14,9 +14,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
  */
 @Schema(description = "Data Transfer Object for Employee entity")
 public record EmployeeDto(
+        // TODO: Decide final ID format (Long vs UUID) and update example accordingly
         @Schema(
                 description = "Unique identifier of the Employee",
-                example = "9",
+                example = "9",  // or "123e4567-e89b-12d3-a456-426614174000",
                 accessMode = Schema.AccessMode.READ_ONLY
         )
         String id,
