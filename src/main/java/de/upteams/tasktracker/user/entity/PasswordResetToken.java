@@ -1,5 +1,6 @@
 package de.upteams.tasktracker.user.entity;
 
+import de.upteams.tasktracker.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +13,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PasswordResetToken {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PasswordResetToken extends BaseEntity {
+
 
     @Column(nullable = false, unique = true)
     private String token;
@@ -28,10 +28,18 @@ public class PasswordResetToken {
     @Column(nullable = false)
     private LocalDateTime expiryDate;
 
-
+    @Builder
     public PasswordResetToken(String token, AppUser user) {
         this.token = token;
         this.user = user;
         this.expiryDate = LocalDateTime.now().plusMinutes(60);
+    }
+    @Override
+    public String toString() {
+        return "PasswordResetToken{" +
+                "token='" + token + '\'' +
+                ", user=" + (user != null ? user.getEmail() : "null") +
+                ", expiryDate=" + expiryDate +
+                '}';
     }
 }
