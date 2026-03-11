@@ -17,11 +17,24 @@ import org.mapstruct.MappingConstants;
 )
 public interface AppUserMapper {
 
-    @Mapping(target = "role", expression = "java(entity.getRole().name())")
+    /**
+     * Maps AppUser entity to UserResponseDto
+     */
+    @Mapping(target = "id", expression = "java(entity.getId() != null ? entity.getId().toString() : null)")
+    @Mapping(target = "role", expression = "java(entity.getRole() != null ? entity.getRole().name() : null)")
     UserResponseDto mapEntityToDto(AppUser entity);
 
-    @Mapping(target = "role", expression = "java(entity.getRole().name())")
+    /**
+     * Maps AppUser entity to UserCreateResponseDto for registration responses
+     */
+    @Mapping(target = "id", expression = "java(entity.getId() != null ? entity.getId().toString() : null)")
+    @Mapping(target = "role", expression = "java(entity.getRole() != null ? entity.getRole().name() : null)")
+    @Mapping(target = "confirmationResent", constant = "false")
     UserCreateResponseDto mapEntityToCreateResponseDto(AppUser entity);
 
+    /**
+     * Maps AppUser entity to EmployeeDto for project assignments
+     *
+     */
     EmployeeDto mapToEmployeeDto(AppUser entity);
 }
