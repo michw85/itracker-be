@@ -6,10 +6,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
  * Employee DTO for project assignments
  *
  * @param id       Employee ID
- * @param name     Employee's name
+ * @param displayName     Employee's name
  * @param password Employee's password
  * @param email    Employee's email
- * @param avatar   URL of Employee's avatar image
+ * @param avatarUrl   URL of Employee's avatar image
  * @param roles    Roles of the Employee for authorization process
  */
 @Schema(description = "Data Transfer Object for Employee entity")
