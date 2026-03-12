@@ -1,5 +1,6 @@
 package de.upteams.tasktracker.user.dto.request;
 
+import de.upteams.tasktracker.user.validator.ValidPassword;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -28,6 +29,6 @@ public record UserCreateDto(
                 requiredMode = Schema.RequiredMode.REQUIRED
         )
         @NotBlank(message = "Password is required")
-        @Size(min = 8, message = "Password must be at least 8 characters long")
+        @ValidPassword
         String password) {
 }
