@@ -1,12 +1,15 @@
 package de.upteams.tasktracker.user.service;
 
 import de.upteams.tasktracker.files.uploading.FileService;
+import de.upteams.tasktracker.user.dto.request.PasswordChangeDto;
 import de.upteams.tasktracker.user.dto.request.ProfileUpdateDto;
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
 import de.upteams.tasktracker.user.entity.AppUser;
+import de.upteams.tasktracker.user.exception.InvalidPasswordException;
 import de.upteams.tasktracker.user.util.AppUserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +26,7 @@ public class UserProfileService {
     private final UserService userService;
     private final AppUserMapper userMapper;
     private final FileService fileService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
     public UserResponseDto getUserProfile(String userId) {
@@ -95,6 +99,23 @@ public class UserProfileService {
         userService.saveOrUpdate(user);
         log.info("Avatar deleted for user {}", userId);
         return userMapper.mapEntityToDto(user);
+    }
+
+    @jakarta.transaction.Transactional
+    public void changePassword(String userId, PasswordChangeDto dto) {
+        AppUser user = userService.getByIdOrThrow(userId);
+
+        if (!passwordEncoder.matches(dto.oldPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("Invalid current password");
+        }
+
+        if (passwordEncoder.matches(dto.newPassword(), user.getPassword())) {
+            throw new InvalidPasswordException("New password must be different from current password");
+        }
+
+        user.setPassword(passwordEncoder.encode(dto.newPassword()));
+        userService.saveOrUpdate(user);
+        log.info("Password updated for user {}", userId);
     }
 
     private String generateAvatarFileName(String userId, String originalFilename) {
