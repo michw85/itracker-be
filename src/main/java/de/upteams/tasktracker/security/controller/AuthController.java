@@ -41,7 +41,7 @@ public class AuthController implements AuthApi {
     @Override
     public TokenResponseDto refreshAccessToken(@CookieValue("Refresh-Token") String refreshToken, HttpServletResponse response) {
         final String newAccessToken = service.refreshAccessToken(refreshToken);
-        final Cookie accessCookie = new Cookie(ACCESS_TOKEN_COOKIE, newAccessToken);
+        final Cookie accessCookie = cookieService.generateAccessTokenCookie(newAccessToken);
 
         response.addCookie(accessCookie);
         return new TokenResponseDto(newAccessToken, refreshToken);
