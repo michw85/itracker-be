@@ -2,6 +2,7 @@ package de.upteams.tasktracker.user.service;
 
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
 import de.upteams.tasktracker.user.entity.AppUser;
+import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,4 +21,11 @@ public interface UserService {
     AppUser getByIdOrThrow(String id);
 
     List<UserResponseDto> getAll();
+
+    String createPasswordResetToken(String email);
+
+    void processForgotPassword(String email);
+
+    @Transactional
+    void resetPassword(String token, String newPassword);
 }
