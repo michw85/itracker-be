@@ -1,6 +1,6 @@
 package de.upteams.tasktracker.user.dto.request;
 
-import de.upteams.tasktracker.user.validator.ValidPassword;
+import de.upteams.tasktracker.user.validator.annotation.ValidPassword;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

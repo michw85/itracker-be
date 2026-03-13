@@ -1,14 +1,15 @@
 package de.upteams.tasktracker.user.controller;
 
 import de.upteams.tasktracker.security.service.AuthUserDetails;
+import de.upteams.tasktracker.user.dto.request.PasswordChangeDto;
 import de.upteams.tasktracker.user.dto.request.ProfileUpdateDto;
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
 import de.upteams.tasktracker.user.service.UserProfileService;
-import de.upteams.tasktracker.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +52,6 @@ public class UserProfileController {
     }
 
 
-
     @Operation(summary = "Upload avatar")
     @PostMapping("/me/avatar")
     @PreAuthorize("isAuthenticated()")
@@ -69,5 +69,15 @@ public class UserProfileController {
             @AuthenticationPrincipal AuthUserDetails principal
     ) {
         return profileService.deleteAvatar(principal.user().getId().toString());
+    }
+
+    @Operation(summary = "Change password")
+    @PutMapping("/me/password")
+    public ResponseEntity<String> changePassword(
+            @AuthenticationPrincipal AuthUserDetails principal,
+            @RequestBody @Valid PasswordChangeDto dto
+    ) {
+        profileService.changePassword(principal.user().getId().toString(), dto);
+        return ResponseEntity.ok("Password successfully changed");
     }
 }
