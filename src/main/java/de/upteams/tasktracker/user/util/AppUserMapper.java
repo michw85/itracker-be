@@ -36,5 +36,7 @@ public interface AppUserMapper {
      * Maps AppUser entity to EmployeeDto for project assignments
      *
      */
+//    @Mapping(target = "roles", expression = "java(java.util.List.of(entity.getRole().name()))")
+//    @Mapping(target = "roles", ignore = true)  // Если поле roles не обязательна
     EmployeeDto mapToEmployeeDto(AppUser entity);
 }
