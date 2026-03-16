@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/tasks"
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "title": "Implement repository layer",
+        "description": "Create JPA repositories for all entities"
+      }
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": "2025-04-26T10:00:00",
+        "status": 403,
+        "error": "Forbidden",
+        "message": "User has no access to this project",
+        "path": "/api/v1/tasks"
+      }
+order: 3000

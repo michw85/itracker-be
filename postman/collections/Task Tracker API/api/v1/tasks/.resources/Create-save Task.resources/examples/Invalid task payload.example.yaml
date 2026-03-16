@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/tasks
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "title": "Implement repository layer",
+        "description": "Create JPA repositories for all entities"
+      }
+response:
+  statusCode: 400
+  statusText: Bad Request
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "field": "title",
+          "messages": [
+            "must not be blank"
+          ]
+        }
+      ]
+order: 2000

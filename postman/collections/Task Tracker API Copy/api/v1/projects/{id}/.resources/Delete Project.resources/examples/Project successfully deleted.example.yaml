@@ -1,0 +1,15 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/projects/:id"
+  method: DELETE
+  pathVariables:
+    - key: id
+      value: string
+      description: Project ID to delete
+response:
+  statusCode: 204
+  statusText: No Content
+  body:
+    type: text
+    content: ""
+order: 1000

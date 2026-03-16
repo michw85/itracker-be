@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/users/profile/:userId"
+method: GET
+headers:
+  Accept: "*/*"
+pathVariables:
+  userId: string
+examples: ./.resources/Get user profile by ID.resources/examples
+order: 1000

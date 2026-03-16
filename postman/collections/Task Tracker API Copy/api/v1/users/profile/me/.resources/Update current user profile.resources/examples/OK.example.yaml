@@ -1,0 +1,36 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/users/profile/me"
+  method: PUT
+  headers:
+    Content-Type: application/json
+    Accept: "*/*"
+  body:
+    type: json
+    content: |-
+      {
+        "displayName": "John Doe",
+        "position": "Senior Developer",
+        "department": "Engineering",
+        "bio": "Full-stack developer with 5 years of experience"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "id": "string",
+        "displayName": "Homer Simpsons",
+        "email": "homer@simpsons.com",
+        "position": "Frontend Developer",
+        "department": "Frontend",
+        "avatarUrl": "https://storage.example.com/avatars/user123.jpg",
+        "bio": "Frontend developer with 5 years of experience",
+        "role": "ROLE_USER",
+        "confirmationStatus": "UNCONFIRMED"
+      }
+order: 1000

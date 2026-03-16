@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/users/profile/me/avatar"
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+body:
+  type: json
+  content: |-
+    {
+      "avatar": "string"
+    }
+examples: ./.resources/Upload avatar.resources/examples
+order: 1000

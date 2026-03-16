@@ -1,0 +1,11 @@
+$kind: http-request
+description: Get all Projects from the Database
+url: http://{{baseUrl}}/api/v1/projects
+method: GET
+headers:
+  Accept: application/json
+body:
+  type: text
+  content: ""
+examples: ./.resources/Get all Projects.resources/examples
+order: 1000

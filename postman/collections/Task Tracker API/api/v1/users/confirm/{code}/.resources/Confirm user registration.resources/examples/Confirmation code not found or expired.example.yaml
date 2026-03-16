@@ -1,0 +1,27 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/users/confirm/:code
+  method: GET
+  headers:
+    Accept: application/json
+  pathVariables:
+    code: string
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": 1627660173000,
+        "status": 404,
+        "error": "Not Found",
+        "message": "Confirmation code is invalid or expired",
+        "path": "/api/v1/users/confirm/abcdef123456"
+      }
+order: 2000

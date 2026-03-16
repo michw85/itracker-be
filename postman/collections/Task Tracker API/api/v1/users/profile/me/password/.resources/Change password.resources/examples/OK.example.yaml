@@ -1,0 +1,24 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/users/profile/me/password
+  method: PUT
+  headers:
+    Content-Type: application/json
+    Accept: "*/*"
+  body:
+    type: json
+    content: |-
+      {
+        "oldPassword": "Password@123",
+        "newPassword": "Password@456",
+        "newPasswordConfirm": "Password@456"
+      }
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: string
+order: 1000

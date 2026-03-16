@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/users/profile/me"
+method: GET
+headers:
+  Accept: "*/*"
+examples: ./.resources/Get current user profile.resources/examples
+order: 3000

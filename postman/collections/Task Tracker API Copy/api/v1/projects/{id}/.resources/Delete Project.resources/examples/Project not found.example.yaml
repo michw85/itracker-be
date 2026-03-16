@@ -1,0 +1,26 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/projects/:id"
+  method: DELETE
+  headers:
+    Accept: application/json
+  pathVariables:
+    - key: id
+      value: string
+      description: Project ID to delete
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": "2025-04-26T10:00:00",
+        "status": 404,
+        "error": "Not Found",
+        "message": "Project not found with id: 7",
+        "path": "/api/v1/projects/7"
+      }
+order: 2000

@@ -1,0 +1,9 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/invitations/accept?token=string"
+method: POST
+headers:
+  Accept: "*/*"
+queryParams:
+  token: string
+examples: ./.resources/Accept a project invitation.resources/examples
+order: 1000

@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/test/auth/not-annotated"
+method: GET
+headers:
+  Accept: "*/*"
+examples: ./.resources/not Annotated.resources/examples
+order: 1000

@@ -1,0 +1,10 @@
+$kind: http-request
+description: Retrieves a task by its ID
+url: "{{baseUrl}}/api/v1/tasks/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  id: string
+examples: ./.resources/Get Task.resources/examples
+order: 1000

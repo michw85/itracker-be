@@ -1,0 +1,15 @@
+$kind: http-request
+description: Delete Project from the Database by its ID
+url: http://{{baseUrl}}/api/v1/projects/:id
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: string
+    description: Project ID to delete
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete Project.resources/examples
+order: 2000

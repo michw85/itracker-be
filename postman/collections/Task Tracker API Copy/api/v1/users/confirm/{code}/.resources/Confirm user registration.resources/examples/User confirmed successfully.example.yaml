@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/users/confirm/:code"
+  method: GET
+  headers:
+    Accept: application/json
+  pathVariables:
+    code: string
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "email": "tes_dev@upteams.de",
+        "role": "ROLE_USER",
+        "confirmationStatus": "CONFIRMED"
+      }
+order: 1000

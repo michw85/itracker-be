@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/users/register
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "email": "tes_dev@upteams.de",
+        "password": "dev_TR_pass_007",
+        "displayName": "John Doe"
+      }
+response:
+  statusCode: 409
+  statusText: Conflict
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": 1627660173000,
+        "status": 409,
+        "error": "Conflict",
+        "message": "User already exists",
+        "path": "/api/v1/users/register"
+      }
+order: 3000

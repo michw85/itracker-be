@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/tasks/:id"
+  method: GET
+  headers:
+    Accept: application/json
+  pathVariables:
+    id: string
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "string",
+        "title": "Implement repository layer",
+        "description": "Create JPA repositories for all entities",
+        "executors": [
+          {
+            "id": "string",
+            "displayName": "Homer Simpson",
+            "password": "HomerTheBest123",
+            "email": "homer@simpsons.com",
+            "position": "Developer",
+            "avatarUrl": "string",
+            "roles": {
+              "name": "ROLE_ADMIN"
+            }
+          }
+        ]
+      }
+order: 1000

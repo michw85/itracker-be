@@ -1,0 +1,22 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/auth/logout
+  method: POST
+  headers:
+    Accept: application/json
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "accessToken": null,
+        "refreshToken": null
+      }
+order: 1000

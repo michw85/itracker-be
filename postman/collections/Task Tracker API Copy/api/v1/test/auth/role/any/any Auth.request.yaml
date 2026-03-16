@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/test/auth/role/any"
+method: GET
+headers:
+  Accept: "*/*"
+examples: ./.resources/any Auth.resources/examples
+order: 1000

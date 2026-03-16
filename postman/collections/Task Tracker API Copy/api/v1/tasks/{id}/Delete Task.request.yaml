@@ -1,0 +1,10 @@
+$kind: http-request
+description: Deletes a task by its ID
+url: "{{baseUrl}}/api/v1/tasks/:id"
+method: DELETE
+headers:
+  Accept: application/json
+pathVariables:
+  id: string
+examples: ./.resources/Delete Task.resources/examples
+order: 2000
