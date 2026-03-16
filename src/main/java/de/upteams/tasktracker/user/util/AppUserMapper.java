@@ -36,7 +36,12 @@ public interface AppUserMapper {
      * Maps AppUser entity to EmployeeDto for project assignments
      *
      */
+    @Mapping(target = "id", expression = "java(entity.getId() != null ? entity.getId().toString() : null)")
+    @Mapping(target = "displayName", source = "displayName")
+    @Mapping(target = "email", source = "email")
+    @Mapping(target = "position", source = "position")
+    @Mapping(target = "avatarUrl", source = "avatarUrl")
 //    @Mapping(target = "roles", expression = "java(java.util.List.of(entity.getRole().name()))")
-//    @Mapping(target = "roles", ignore = true)  // Если поле roles не обязательна
+    @Mapping(target = "roles", ignore = true)  // Если поле roles не обязательна
     EmployeeDto mapToEmployeeDto(AppUser entity);
 }
