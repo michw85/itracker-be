@@ -1,0 +1,43 @@
+spring:
+  # Используем H2 базу данных для тестов
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  # Отключаем security для тестов (опционально)
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration
+
+# JWT настройки для тестов
+jwt:
+  at:
+    live-in-min: 10
+    secret: dGVzdC1hY2Nlc3Mtc2VjcmV0LWZvci1qd3QtdGVzdGluZy1wdXJwb3Nlcy1vbmx5LTEyMzQ1Njc4OTA=
+  rt:
+    live-in-min: 1440
+    secret: dGVzdC1yZWZyZXNoLXNlY3JldC1mb3Itand0LXRlc3RpbmctcHVycG9zZXMtb25seS0xMjM0NTY3ODkw
+
+# Email для тестов (отключаем)
+spring.mail:
+  host: localhost
+  port: 3025
+  username: test
+  password: test
+
+# Отключаем проверку шаблонов
+spring.freemarker:
+  check-template-location: false
