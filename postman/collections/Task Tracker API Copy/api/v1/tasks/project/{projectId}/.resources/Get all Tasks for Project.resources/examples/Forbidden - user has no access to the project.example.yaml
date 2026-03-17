@@ -1,0 +1,30 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/tasks/project/:projectId"
+  method: GET
+  headers:
+    Accept: application/json
+  pathVariables:
+    projectId: string
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": "2025-04-26T10:00:00",
+        "status": 404,
+        "error": "Not Found",
+        "message": "User not found",
+        "errors": {
+          "field": "email",
+          "messages": [
+            "must be a well-formed email address"
+          ]
+        },
+        "path": "api/v1/users/42"
+      }
+order: 2000

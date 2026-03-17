@@ -1,0 +1,33 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/tasks"
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "title": "Implement repository layer",
+        "description": "Create JPA repositories for all entities"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "5",
+        "title": "Implement repository layer",
+        "description": "Create JPA repositories for all entities",
+        "project": {
+          "id": "7",
+          "title": "New Website Development"
+        },
+        "executors": []
+      }
+order: 1000

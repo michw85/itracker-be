@@ -49,4 +49,21 @@ public class CollaboratorServiceImpl implements CollaboratorService {
                 .anyMatch(requiredRoles::contains);
     }
 
+    @Override
+    public Collaborator addCollaborator(Project project, AppUser user, ProjectRoles role) {
+        // Checking if the user is already a collaborator
+        Optional<Collaborator> existing = getCollaborator(user, project);
+        if (existing.isPresent()) {
+            return existing.get();
+        }
+
+        // We are creating a new collaborator
+        Collaborator collaborator = new Collaborator();
+        collaborator.setAppUser(user);
+        collaborator.setProject(project);
+        collaborator.getProjectRolesSet().add(role);
+
+        return collaboratorRepository.save(collaborator);
+    }
+
 }

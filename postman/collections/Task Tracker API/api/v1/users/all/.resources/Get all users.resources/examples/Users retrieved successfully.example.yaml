@@ -1,0 +1,42 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/users/all
+  method: GET
+  headers:
+    Accept: application/json
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      [
+        {
+          "id": "string",
+          "displayName": "Homer Simpsons",
+          "email": "homer@simpsons.com",
+          "position": "Frontend Developer",
+          "department": "Frontend",
+          "avatarUrl": "https://storage.example.com/avatars/user123.jpg",
+          "bio": "Frontend developer with 5 years of experience",
+          "role": "ROLE_USER",
+          "confirmationStatus": "UNCONFIRMED"
+        },
+        {
+          "id": "string",
+          "displayName": "Homer Simpsons",
+          "email": "homer@simpsons.com",
+          "position": "Frontend Developer",
+          "department": "Frontend",
+          "avatarUrl": "https://storage.example.com/avatars/user123.jpg",
+          "bio": "Frontend developer with 5 years of experience",
+          "role": "ROLE_USER",
+          "confirmationStatus": "UNCONFIRMED"
+        }
+      ]
+order: 1000

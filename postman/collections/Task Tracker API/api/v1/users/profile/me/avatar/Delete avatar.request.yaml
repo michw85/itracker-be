@@ -1,0 +1,10 @@
+$kind: http-request
+url: http://{{baseUrl}}/api/v1/users/profile/me/avatar
+method: DELETE
+headers:
+  Accept: "*/*"
+body:
+  type: text
+  content: ""
+examples: ./.resources/Delete avatar.resources/examples
+order: 2000

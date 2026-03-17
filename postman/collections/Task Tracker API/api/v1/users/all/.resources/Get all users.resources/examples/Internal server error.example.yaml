@@ -1,0 +1,31 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/users/all
+  method: GET
+  headers:
+    Accept: application/json
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 500
+  statusText: Internal Server Error
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "timestamp": "2025-04-26T10:00:00",
+        "status": 404,
+        "error": "Not Found",
+        "message": "User not found",
+        "errors": {
+          "field": "email",
+          "messages": [
+            "must be a well-formed email address"
+          ]
+        },
+        "path": "api/v1/users/42"
+      }
+order: 2000

@@ -1,0 +1,18 @@
+$kind: http-request
+description: Creates a new user account and sends a confirmation email. If user
+  already exists but is unconfirmed, resends the confirmation email.
+url: http://{{baseUrl}}/api/v1/users/register
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "tes_dev@upteams.de",
+      "password": "dev_TR_pass_007",
+      "displayName": "John Doe"
+    }
+examples: ./.resources/Register new user.resources/examples
+order: 1000

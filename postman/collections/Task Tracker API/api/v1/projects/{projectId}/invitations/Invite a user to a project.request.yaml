@@ -1,0 +1,17 @@
+$kind: http-request
+url: http://{{baseUrl}}/api/v1/projects/:projectId/invitations
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: "*/*"
+pathVariables:
+  projectId: string
+body:
+  type: json
+  content: |-
+    {
+      "email": "user@example.com",
+      "role": "MEMBER"
+    }
+examples: ./.resources/Invite a user to a project.resources/examples
+order: 1000

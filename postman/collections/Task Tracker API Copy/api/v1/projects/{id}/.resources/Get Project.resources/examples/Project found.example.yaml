@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/projects/:id"
+  method: GET
+  headers:
+    Accept: application/json
+  pathVariables:
+    - key: id
+      value: string
+      description: Project ID to search
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "string",
+        "title": "New Website Development",
+        "description": "A Project to develop a new company website",
+        "owner": {
+          "id": "string",
+          "displayName": "Homer Simpson",
+          "password": "HomerTheBest123",
+          "email": "homer@simpsons.com",
+          "position": "Developer",
+          "avatarUrl": "string",
+          "roles": {
+            "name": "ROLE_ADMIN"
+          }
+        }
+      }
+order: 1000

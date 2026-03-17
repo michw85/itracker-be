@@ -1,0 +1,34 @@
+$kind: http-example
+request:
+  url: http://{{baseUrl}}/api/v1/projects
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "title": "New Website Development",
+        "description": "A Project to develop a new company website"
+      }
+response:
+  statusCode: 201
+  statusText: Created
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "id": "7",
+        "title": "New Website Development",
+        "description": "A Project to develop a new company website",
+        "owner": {
+          "id": "42",
+          "email": "tes_dev@upteams.de",
+          "firstName": "Test",
+          "lastName": "Dev"
+        }
+      }
+order: 1000

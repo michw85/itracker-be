@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/test/auth/permit-all"
+method: GET
+headers:
+  Accept: "*/*"
+examples: ./.resources/permit All.resources/examples
+order: 1000

@@ -1,0 +1,10 @@
+$kind: http-request
+description: Retrieves all tasks under a specific project
+url: "{{baseUrl}}/api/v1/tasks/project/:projectId"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  projectId: string
+examples: ./.resources/Get all Tasks for Project.resources/examples
+order: 1000

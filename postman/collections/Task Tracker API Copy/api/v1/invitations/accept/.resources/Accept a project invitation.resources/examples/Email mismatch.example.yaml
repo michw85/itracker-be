@@ -1,0 +1,23 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/invitations/accept?token=string"
+  method: POST
+  headers:
+    Accept: "*/*"
+  queryParams:
+    token: string
+response:
+  statusCode: 403
+  statusText: Forbidden
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "message": "string",
+        "success": false,
+        "projectId": "string",
+        "projectName": "string"
+      }
+order: 3000

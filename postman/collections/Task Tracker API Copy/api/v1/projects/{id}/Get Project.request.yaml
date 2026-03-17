@@ -1,0 +1,12 @@
+$kind: http-request
+description: Get one Project from the Database by its ID
+url: "{{baseUrl}}/api/v1/projects/:id"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: id
+    value: string
+    description: Project ID to search
+examples: ./.resources/Get Project.resources/examples
+order: 1000

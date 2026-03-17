@@ -1,0 +1,17 @@
+$kind: http-request
+name: Create/save Task
+description: Creates a new task associated with a project
+url: http://{{baseUrl}}/api/v1/tasks
+method: POST
+headers:
+  Content-Type: application/json
+  Accept: application/json
+body:
+  type: json
+  content: |-
+    {
+      "title": "Implement repository layer",
+      "description": "Create JPA repositories for all entities"
+    }
+examples: ./.resources/Create-save Task.resources/examples
+order: 1000

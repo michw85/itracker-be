@@ -1,8 +1,8 @@
 package de.upteams.tasktracker.task.constants;
 
-public final class TaskValidationConstats {
+public final class TaskValidationConstants {
 
-    private TaskValidationConstats() {
+    private TaskValidationConstants() {
         throw new IllegalStateException("Utility class");
     }
 }

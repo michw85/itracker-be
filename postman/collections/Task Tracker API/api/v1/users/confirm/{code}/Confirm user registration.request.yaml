@@ -1,0 +1,13 @@
+$kind: http-request
+description: Confirms a user's registration using a confirmation code sent via email.
+url: http://{{baseUrl}}/api/v1/users/confirm/:code
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  code: string
+body:
+  type: text
+  content: ""
+examples: ./.resources/Confirm user registration.resources/examples
+order: 1000

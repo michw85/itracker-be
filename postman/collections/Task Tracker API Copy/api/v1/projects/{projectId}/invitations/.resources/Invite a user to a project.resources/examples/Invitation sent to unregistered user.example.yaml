@@ -1,0 +1,35 @@
+$kind: http-example
+request:
+  url: "{{baseUrl}}/api/v1/projects/:projectId/invitations"
+  method: POST
+  headers:
+    Content-Type: application/json
+    Accept: "*/*"
+  pathVariables:
+    projectId: string
+  body:
+    type: json
+    content: |-
+      {
+        "email": "user@example.com",
+        "role": "MEMBER"
+      }
+response:
+  statusCode: 202
+  statusText: Accepted
+  headers:
+    Content-Type: "*/*"
+  body:
+    type: text
+    content: |-
+      {
+        "email": "string",
+        "role": "MEMBER",
+        "id": "4b86a09b-8b70-01f6-0dcb-733d0d55b9ac",
+        "status": "EXPIRED",
+        "inviteToken": "f4ab9ba2-2bb9-2e6e-8fa0-f93b2009d432",
+        "expiresAt": "1977-04-10T09:21:55.578Z",
+        "projectId": "b91ce5e3-6475-12dc-09ec-101acf2d0c9d",
+        "projectName": "string"
+      }
+order: 2000

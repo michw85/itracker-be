@@ -1,0 +1,8 @@
+$kind: http-request
+description: Returns a JSON array of all users in the system
+url: "{{baseUrl}}/api/v1/users/all"
+method: GET
+headers:
+  Accept: application/json
+examples: ./.resources/Get all users.resources/examples
+order: 1000

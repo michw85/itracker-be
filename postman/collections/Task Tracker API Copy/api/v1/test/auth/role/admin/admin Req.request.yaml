@@ -1,0 +1,7 @@
+$kind: http-request
+url: "{{baseUrl}}/api/v1/test/auth/role/admin"
+method: GET
+headers:
+  Accept: "*/*"
+examples: ./.resources/admin Req.resources/examples
+order: 1000
