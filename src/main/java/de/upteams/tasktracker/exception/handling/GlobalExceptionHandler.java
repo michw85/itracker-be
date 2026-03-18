@@ -5,6 +5,8 @@ import de.upteams.tasktracker.exception.handling.response.ErrorResponseDto;
 import de.upteams.tasktracker.exception.handling.response.ValidationErrorDto;
 import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
@@ -57,6 +59,33 @@ public class GlobalExceptionHandler {
                     .add(fieldError.getDefaultMessage());
         }
 
+        return getErrorResponseEntity(request, fieldErrorsMap);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDto> handleValidationException(
+            ConstraintViolationException ex,
+            HttpServletRequest request
+    ) {
+        Map<String, List<String>> fieldErrorsMap = new HashMap<>();
+
+        for (ConstraintViolation<?> constraintViolation : ex.getConstraintViolations()) {
+            fieldErrorsMap.computeIfAbsent(
+                            constraintViolation
+                                    .getPropertyPath()
+                                    .toString(),
+                            key -> new ArrayList<>()
+                    )
+                    .add(constraintViolation.getMessage());
+        }
+
+        return getErrorResponseEntity(request, fieldErrorsMap);
+    }
+
+    private ResponseEntity<ErrorResponseDto> getErrorResponseEntity(
+            HttpServletRequest request,
+            Map<String, List<String>> fieldErrorsMap
+    ) {
         List<ValidationErrorDto> validationErrors = fieldErrorsMap.entrySet().stream()
                 .map(entry -> new ValidationErrorDto(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
