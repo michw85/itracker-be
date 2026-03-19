@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
 
     private final JavaMailSender mailSender;
-    @Value("${app.base-url}")
-    private String baseUrl;
+
+    private String baseUrl = "http://localhost:5173";
 
     @Override
     public void sendPasswordResetEmail(String userEmail, String token) {
 
-        String resetUrl = baseUrl + "/reset-password?token=" + token;
+        String resetUrl = baseUrl + "/#/reset-password?token=" + token;
 
         String content = "<p>Hello,</p>" +
                 "<p>You have requested to reset your password for your TaskTracker account.</p>" +
