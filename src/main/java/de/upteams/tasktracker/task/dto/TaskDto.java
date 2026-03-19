@@ -32,6 +32,9 @@ public class TaskDto {
     )
     String description;
 
+    @Schema(description = "Task status", example = "ACTIVE")
+    String status;
+
     @JsonIgnore
     @Schema(
             description = "The Project whit which this Task is associated",

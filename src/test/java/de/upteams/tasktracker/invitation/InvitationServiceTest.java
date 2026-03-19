@@ -55,7 +55,7 @@ class InvitationServiceTest {
     @Mock
     private EmailService emailService;
 
-    @Mock  // Добавляем мок для маппера
+    @Mock  // Adding a mock for the mapper
     private InvitationMapper invitationMapper;
 
     // The service under test with all mocked dependencies injected
@@ -281,7 +281,7 @@ class InvitationServiceTest {
                 invitationService.acceptInvitation(token, regularUser)
         );
 
-        verify(collaboratorService, never()).addCollaborator(any(), any(), any());
+        verify(collaboratorService, never()).addCollaborator(any(Project.class), any(AppUser.class), any(ProjectRoles.class));
         verify(invitationRepository, never()).save(any());
     }
 
@@ -302,7 +302,7 @@ class InvitationServiceTest {
         );
 
         assertTrue(exception.getMessage().contains("different email"));
-        verify(collaboratorService, never()).addCollaborator(any(), any(), any());
+        verify(collaboratorService, never()).addCollaborator(any(Project.class), any(AppUser.class), any(ProjectRoles.class));
         verify(invitationRepository, never()).save(any());
     }
 
