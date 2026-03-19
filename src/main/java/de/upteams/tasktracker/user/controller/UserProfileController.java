@@ -1,6 +1,7 @@
 package de.upteams.tasktracker.user.controller;
 
 import de.upteams.tasktracker.security.service.AuthUserDetails;
+import de.upteams.tasktracker.user.dto.request.AvatarUrlDto;
 import de.upteams.tasktracker.user.dto.request.PasswordChangeDto;
 import de.upteams.tasktracker.user.dto.request.ProfileUpdateDto;
 import de.upteams.tasktracker.user.dto.response.UserResponseDto;
@@ -52,14 +53,23 @@ public class UserProfileController {
     }
 
 
-    @Operation(summary = "Upload avatar")
+    @Operation(summary = "Upload avatar file URL")
     @PostMapping("/me/avatar")
     @PreAuthorize("isAuthenticated()")
     public UserResponseDto uploadAvatar(
             @AuthenticationPrincipal AuthUserDetails principal,
-            @RequestParam("avatar") MultipartFile file
+            @RequestParam("file") MultipartFile file
     ) {
         return profileService.uploadAvatar(principal.user().getId().toString(), file);
+    }
+    @Operation(summary = "Upload avatar URL")
+    @PostMapping("/me/avatar/url")
+    @PreAuthorize("isAuthenticated()")
+    public UserResponseDto updateAvatarUrl(
+            @AuthenticationPrincipal AuthUserDetails principal,
+            @RequestBody AvatarUrlDto dto
+    ) {
+        return profileService.updateAvatarUrl(principal.user().getId().toString(), dto.avatarUrl());
     }
 
     @Operation(summary = "Delete avatar")

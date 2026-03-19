@@ -52,6 +52,15 @@ public class UserProfileService {
     }
 
     @Transactional
+    public UserResponseDto updateAvatarUrl(String userId, String avatarUrl) {
+        AppUser user = userService.getByIdOrThrow(userId);
+        user.updateAvatar(avatarUrl);
+        userService.saveOrUpdate(user);
+        log.info("Avatar URL updated for user {}", userId);
+        return userMapper.mapEntityToDto(user);
+    }
+
+    @Transactional
     public UserResponseDto uploadAvatar(String userId, MultipartFile file) {
         AppUser user = userService.getByIdOrThrow(userId);
 
