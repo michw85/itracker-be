@@ -1,5 +1,6 @@
 package de.upteams.tasktracker.task.utils;
 
+import de.upteams.tasktracker.project.utils.ProjectMapper;
 import de.upteams.tasktracker.task.dto.TaskDto;
 import de.upteams.tasktracker.task.entity.Task;
 import de.upteams.tasktracker.user.util.AppUserMapper;
@@ -13,16 +14,18 @@ import org.mapstruct.MappingConstants;
  */
 @Mapper(
         componentModel = MappingConstants.ComponentModel.SPRING,
-        uses = AppUserMapper.class
+        uses = {AppUserMapper.class, ProjectMapper.class}
 )
 public interface TaskMappingService {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "project.owner", ignore = true)
+//    @Mapping(target = "project.owner", ignore = true)
+    @Mapping(target = "project", source = "project", qualifiedByName = "toResponseDto")
     @Mapping(target = "executors", ignore = true)
     TaskDto mapEntityToDto(Task entity);
 
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "executors", ignore = true)
+    @Mapping(target = "status", source = "status")
     Task mapDtoToEntity(TaskDto dto);
 }

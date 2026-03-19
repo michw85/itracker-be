@@ -47,6 +47,10 @@ public class Task extends BaseEntity {
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private TaskStatus status;
+
     @ManyToMany
     @JoinTable(
             name = "task_user",
@@ -54,6 +58,13 @@ public class Task extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private final Set<Collaborator> executors = new HashSet<>();
+
+    public Task(String title, String description, Project project, TaskStatus status) {
+        this.title = title;
+        this.description = description;
+        this.project = project;
+        this.status = status;
+    }
 
     public Task(String title, String description, Project project) {
         this.title = title;

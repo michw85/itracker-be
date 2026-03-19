@@ -54,4 +54,19 @@ public interface InvitationRepository extends JpaRepository<Invitation, UUID> {
             @Param("status") InvitationStatus status,
             @Param("now") LocalDateTime now
     );
+
+    @Query("SELECT i FROM Invitation i WHERE i.project.id = :projectId")
+    List<Invitation> findByProjectId(@Param("projectId") UUID projectId);
+
+    // Добавьте для отладки:
+    @Query("SELECT COUNT(i) FROM Invitation i WHERE i.project.id = :projectId")
+    long countByProjectId(@Param("projectId") UUID projectId);
+
+    // Find all participants (accepted invitations) of a project
+    @Query("SELECT i FROM Invitation i WHERE i.project.id = :projectId AND i.status = 'USED'")
+    List<Invitation> findAcceptedByProjectId(@Param("projectId") UUID projectId);
+
+    //Find pending project invitations
+    @Query("SELECT i FROM Invitation i WHERE i.project.id = :projectId AND i.status = 'PENDING'")
+    List<Invitation> findPendingByProjectId(@Param("projectId") UUID projectId);
 }
