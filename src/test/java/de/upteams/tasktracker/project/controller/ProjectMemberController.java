@@ -149,7 +149,6 @@ class ProjectMemberControllerTest {
 
         when(invitationService.getProjectMembers(projectId)).thenReturn(members);
 
-        // Убрали третий параметр new HashMap<>()
         ResponseEntity<List<MemberResponseDto>> response =
                 controller.getProjectMembers(projectId, authUserDetails);
 
@@ -159,16 +158,36 @@ class ProjectMemberControllerTest {
     }
 
     @Test
-    void getProjectMembers_WhenUserNoAccess_ShouldReturn403() {
+    void getProjectMembers_WhenUserNoAccess_ShouldReturn403() throws Exception {
         when(collaboratorService.getUserRoleInProject(projectId, userId))
                 .thenReturn(Optional.empty());
 
-        // Убрали третий параметр new HashMap<>()
+        // Создаем проект без владельца
+        Project projectWithoutOwner = new Project("Test Project", "Test Description", null);
+        setIdInHierarchy(projectWithoutOwner, "id", projectId);
+
+        when(projectService.getOrTrow(projectId.toString())).thenReturn(projectWithoutOwner);
+
         ResponseEntity<List<MemberResponseDto>> response =
                 controller.getProjectMembers(projectId, authUserDetails);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
         verify(invitationService, never()).getProjectMembers(any());
+    }
+
+    private void setIdInHierarchy(Object object, String fieldName, UUID id) throws Exception {
+        Class<?> clazz = object.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                field.set(object, id);
+                return;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new RuntimeException("Could not find field " + fieldName + " in " + object.getClass());
     }
 
     @Test
