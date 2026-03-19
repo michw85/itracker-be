@@ -17,17 +17,24 @@ import de.upteams.tasktracker.project.dto.MemberResponseDto;
 import de.upteams.tasktracker.project.entity.Project;
 import de.upteams.tasktracker.project.persistence.ProjectRepository;
 import de.upteams.tasktracker.project.service.interfaces.ProjectService;
+import de.upteams.tasktracker.security.service.AuthUserDetails;
 import de.upteams.tasktracker.user.entity.AppUser;
 import de.upteams.tasktracker.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -286,57 +293,127 @@ public class InvitationService {
     /**
      * Get a list of all project participants (including pending invitations)
      */
+//    @Transactional(readOnly = true)
+//    public List<MemberResponseDto> getProjectMembers(UUID projectId) {
+//        log.info("========== INVITATION SERVICE: getProjectMembers ==========");
+//        log.info("Project ID: {}", projectId);
+//
+//        try {
+//            // Check: Does the project exist?
+//            boolean projectExists = projectRepository.existsById(projectId);
+//            log.info("Project exists in DB: {}", projectExists);
+//
+//            if (!projectExists) {
+//                log.warn("Project {} does not exist", projectId);
+//                return new ArrayList<>();
+//            }
+//
+//            // Search for invitations
+//            log.info("Searching invitations in repository...");
+//            List<Invitation> invitations = invitationRepository.findByProjectId(projectId);
+//            log.info("Repository returned {} invitations", invitations.size());
+//
+//            List<MemberResponseDto> result = new ArrayList<>();
+//
+//            if (!invitations.isEmpty()) {
+//                // Invitation mapping
+//                for (int i = 0; i < invitations.size(); i++) {
+//                    Invitation inv = invitations.get(i);
+//                    log.info("Processing invitation {}: id={}, email={}, status={}",
+//                            i, inv.getId(), inv.getEmail(), inv.getStatus());
+//
+//                    try {
+//                        MemberResponseDto dto = mapToMemberResponse(inv);
+//                        result.add(dto);
+//                        log.info("Successfully mapped invitation {}", i);
+//                    } catch (Exception e) {
+//                        log.error("Error mapping invitation {}: {}", i, e.getMessage(), e);
+//                    }
+//                }
+//            }
+//
+//            // Add participants from collaborator (if they are not included in the invitations)
+//            List<MemberResponseDto> collaboratorMembers = getMembersFromCollaborators(projectId);
+//
+//            // Consolidate and avoid duplicate emails
+//            Set<String> existingEmails = result.stream()
+//                    .map(MemberResponseDto::getEmail)
+//                    .collect(Collectors.toSet());
+//
+//            for (MemberResponseDto collabMember : collaboratorMembers) {
+//                if (!existingEmails.contains(collabMember.getEmail())) {
+//                    result.add(collabMember);
+//                }
+//            }
+//
+//            log.info("Returning {} members total", result.size());
+//            return result;
+//
+//        } catch (Exception e) {
+//            log.error("!!! EXCEPTION in getProjectMembers: {}", e.getMessage(), e);
+//            throw new RuntimeException("Failed to get project members", e);
+//        }
+//    }
+
     @Transactional(readOnly = true)
     public List<MemberResponseDto> getProjectMembers(UUID projectId) {
         log.info("========== INVITATION SERVICE: getProjectMembers ==========");
         log.info("Project ID: {}", projectId);
 
+        List<MemberResponseDto> result = new ArrayList<>();
+
         try {
-            // Check: Does the project exist?
-            boolean projectExists = projectRepository.existsById(projectId);
-            log.info("Project exists in DB: {}", projectExists);
-
-            if (!projectExists) {
-                log.warn("Project {} does not exist", projectId);
-                return new ArrayList<>();
-            }
-
-            // Search for invitations
+            // 1. Получаем приглашения
             log.info("Searching invitations in repository...");
             List<Invitation> invitations = invitationRepository.findByProjectId(projectId);
             log.info("Repository returned {} invitations", invitations.size());
 
-            List<MemberResponseDto> result = new ArrayList<>();
-
-            if (!invitations.isEmpty()) {
-                // Invitation mapping
-                for (int i = 0; i < invitations.size(); i++) {
-                    Invitation inv = invitations.get(i);
-                    log.info("Processing invitation {}: id={}, email={}, status={}",
-                            i, inv.getId(), inv.getEmail(), inv.getStatus());
-
-                    try {
-                        MemberResponseDto dto = mapToMemberResponse(inv);
-                        result.add(dto);
-                        log.info("Successfully mapped invitation {}", i);
-                    } catch (Exception e) {
-                        log.error("Error mapping invitation {}: {}", i, e.getMessage(), e);
-                    }
+            // Маппинг приглашений
+            for (Invitation inv : invitations) {
+                try {
+                    MemberResponseDto dto = mapToMemberResponse(inv);
+                    result.add(dto);
+                    log.debug("Mapped invitation: {}", inv.getEmail());
+                } catch (Exception e) {
+                    log.error("Error mapping invitation: {}", e.getMessage());
                 }
             }
 
-            // Add participants from collaborator (if they are not included in the invitations)
+            // 2. Добавляем участников из collaborator (если их нет в приглашениях)
             List<MemberResponseDto> collaboratorMembers = getMembersFromCollaborators(projectId);
 
-            // Consolidate and avoid duplicate emails
+            // Объединяем, избегая дубликатов по email
             Set<String> existingEmails = result.stream()
                     .map(MemberResponseDto::getEmail)
+                    .filter(Objects::nonNull)
                     .collect(Collectors.toSet());
 
             for (MemberResponseDto collabMember : collaboratorMembers) {
-                if (!existingEmails.contains(collabMember.getEmail())) {
+                if (collabMember.getEmail() != null && !existingEmails.contains(collabMember.getEmail())) {
                     result.add(collabMember);
+                    log.debug("Added collaborator: {}", collabMember.getEmail());
                 }
+            }
+
+            // 3. Добавляем владельца проекта, если его нет в списке
+            try {
+                Project project = projectService.getOrTrow(projectId.toString());
+                if (project.getOwner() != null) {
+                    String ownerEmail = project.getOwner().getEmail();
+                    if (!existingEmails.contains(ownerEmail)) {
+                        MemberResponseDto ownerDto = MemberResponseDto.builder()
+                                .id(project.getOwner().getId())
+                                .email(ownerEmail)
+                                .role(ProjectRoles.OWNER)
+                                .status("ACTIVE")
+                                .userId(project.getOwner().getId())
+                                .build();
+                        result.add(0, ownerDto); // Добавляем в начало списка
+                        log.debug("Added project owner: {}", ownerEmail);
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Could not add project owner: {}", e.getMessage());
             }
 
             log.info("Returning {} members total", result.size());
@@ -346,6 +423,56 @@ public class InvitationService {
             log.error("!!! EXCEPTION in getProjectMembers: {}", e.getMessage(), e);
             throw new RuntimeException("Failed to get project members", e);
         }
+    }
+
+    @GetMapping("/debug/project/{projectId}/full-info")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Map<String, Object>> debugFullInfo(
+            @PathVariable UUID projectId,
+            @AuthenticationPrincipal AuthUserDetails principal
+    ) {
+        Map<String, Object> debug = new HashMap<>();
+
+        // Информация о пользователе
+        debug.put("currentUser", Map.of(
+                "id", principal.user().getId(),
+                "email", principal.user().getEmail()
+        ));
+
+        // Информация о проекте
+        Project project = projectService.getOrTrow(projectId.toString());
+        debug.put("project", Map.of(
+                "id", project.getId(),
+                "title", project.getTitle(),
+                "ownerId", project.getOwner() != null ? project.getOwner().getId() : null,
+                "ownerEmail", project.getOwner() != null ? project.getOwner().getEmail() : null,
+                "isCurrentUserOwner", project.getOwner() != null &&
+                        project.getOwner().getId().equals(principal.user().getId())
+        ));
+
+        // Коллабораторы
+        List<Collaborator> collaborators = collaboratorRepository.findByProjectId(projectId);
+        debug.put("collaborators", collaborators.stream()
+                .map(c -> Map.of(
+                        "id", c.getId(),
+                        "userId", c.getAppUser() != null ? c.getAppUser().getId() : null,
+                        "userEmail", c.getAppUser() != null ? c.getAppUser().getEmail() : null,
+                        "roles", c.getProjectRolesSet()
+                ))
+                .toList());
+
+        // Приглашения
+        List<Invitation> invitations = invitationRepository.findByProjectId(projectId);
+        debug.put("invitations", invitations.stream()
+                .map(i -> Map.of(
+                        "id", i.getId(),
+                        "email", i.getEmail(),
+                        "role", i.getRole(),
+                        "status", i.getStatus()
+                ))
+                .toList());
+
+        return ResponseEntity.ok(debug);
     }
 
     private List<MemberResponseDto> getMembersFromCollaborators(UUID projectId) {
