@@ -5,9 +5,9 @@ import de.upteams.tasktracker.project.dto.response.ProjectResponseDto;
 import de.upteams.tasktracker.project.entity.Project;
 import de.upteams.tasktracker.task.utils.TaskMappingService;
 import de.upteams.tasktracker.user.util.AppUserMapper;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
+import org.mapstruct.*;
+
+import java.util.List;
 
 /**
  * Interface for Project Mapping Service.
@@ -21,11 +21,14 @@ public interface ProjectMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "owner", ignore = true)
-    ProjectResponseDto mapEntityToDto(Project entity);
-
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "owner", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "projectTeam", ignore = true)
     Project mapDtoToEntity(ProjectCreateDto dto);
+
+    @Named("toResponseDto")
+    @Mapping(target = "ownerId", source = "owner.id")
+    ProjectResponseDto toResponseDto(Project project);
+
+    @IterableMapping(qualifiedByName = "toResponseDto")
+    List<ProjectResponseDto> toResponseDtoList(List<Project> projects);
 }

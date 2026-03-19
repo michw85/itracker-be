@@ -2,6 +2,7 @@ package de.upteams.tasktracker.invitation.entity;
 
 import de.upteams.tasktracker.collaborator.entity.ProjectRoles;
 import de.upteams.tasktracker.project.entity.Project;
+import de.upteams.tasktracker.user.entity.AppUser;
 import de.upteams.tasktracker.utils.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -70,6 +71,16 @@ public class Invitation extends BaseEntity {
     @Column(name = "used_at")
     private LocalDateTime usedAt;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;  // User, if already registered
+
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name = "invited_at")
+    private LocalDateTime invitedAt;
+
     /**
      * Creates a new invitation with default values.
      * Token is auto-generated, expiration set to 72 hours from now.
@@ -84,7 +95,9 @@ public class Invitation extends BaseEntity {
         this.role = role;
         this.inviteToken = UUID.randomUUID();
         this.expiresAt = LocalDateTime.now().plusHours(72);
-        this.status = InvitationStatus.PENDING;
+//        this.status = InvitationStatus.PENDING;
+        this.createdAt = LocalDateTime.now();
+        this.invitedAt = LocalDateTime.now();
     }
 
     /**

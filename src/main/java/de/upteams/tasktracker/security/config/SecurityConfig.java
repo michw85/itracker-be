@@ -73,7 +73,7 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(auth -> auth
-                        // Swagger UI и спецификация — только GET
+                        // Swagger UI and specification - GET only
                         .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
@@ -83,7 +83,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/users/confirm/{code}").permitAll()
 
-                        // авторизация пользователя
+                        // user authorization
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/refresh-token").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/logout").permitAll()
@@ -91,8 +91,21 @@ public class SecurityConfig {
                         .requestMatchers("/reset-password/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/reset-password").permitAll()
 
+                        // Project endpoints require authentication
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projects").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projects/{id}").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projects/{id}/members").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/projects/{id}/my-role").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/projects").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/projects/{id}/invitations").authenticated()
+
                         .anyRequest().authenticated()
                 )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
+                .formLogin(form -> form.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new RestAuthenticationEntryPoint())
                         .accessDeniedHandler(new CustomAccessDeniedHandler())

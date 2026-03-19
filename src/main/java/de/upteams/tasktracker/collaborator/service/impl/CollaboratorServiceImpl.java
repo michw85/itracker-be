@@ -10,9 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +49,18 @@ public class CollaboratorServiceImpl implements CollaboratorService {
     }
 
     @Override
+    public Collaborator addCollaborator(Project project, AppUser user, List<ProjectRoles> roles) {
+        Collaborator collaborator = new Collaborator();
+        collaborator.setProject(project);
+        collaborator.setAppUser(user);
+
+        // Adding several roles
+        collaborator.getProjectRolesSet().addAll(roles);
+
+        return collaboratorRepository.save(collaborator);
+    }
+
+    @Override
     public Collaborator addCollaborator(Project project, AppUser user, ProjectRoles role) {
         // Checking if the user is already a collaborator
         Optional<Collaborator> existing = getCollaborator(user, project);
@@ -64,6 +75,52 @@ public class CollaboratorServiceImpl implements CollaboratorService {
         collaborator.getProjectRolesSet().add(role);
 
         return collaboratorRepository.save(collaborator);
+    }
+
+    @Override
+    public Optional<ProjectRoles> getUserRoleInProject(UUID projectId, UUID userId) {
+        log.info("Getting role for user {} in project {}", userId, projectId);
+
+        Optional<Collaborator> collaboratorOpt = collaboratorRepository
+                .findByProjectIdAndUserId(projectId, userId);
+
+        if (collaboratorOpt.isEmpty()) {
+            log.warn("No collaborator found for user {} in project {}", userId, projectId);
+            return Optional.empty();
+        }
+
+        Collaborator collaborator = collaboratorOpt.get();
+        Set<ProjectRoles> roles = collaborator.getProjectRolesSet();
+        log.info("User has roles: {}", roles);
+
+        // Returning the first role by priority
+        if (roles.contains(ProjectRoles.OWNER)) {
+            return Optional.of(ProjectRoles.OWNER);
+        } else if (roles.contains(ProjectRoles.ADMIN)) {
+            return Optional.of(ProjectRoles.ADMIN);
+        } else if (roles.contains(ProjectRoles.MEMBER)) {
+            return Optional.of(ProjectRoles.MEMBER);
+        } else if (roles.contains(ProjectRoles.VIEWER)) {
+            return Optional.of(ProjectRoles.VIEWER);
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Project> getProjectsByUser(AppUser user) {
+        return collaboratorRepository.findByAppUser(user)
+                .stream()
+                .map(Collaborator::getProject)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Project> getProjectsByUserId(UUID userId) {
+        return collaboratorRepository.findByAppUserId(userId)
+                .stream()
+                .map(Collaborator::getProject)
+                .collect(Collectors.toList());
     }
 
 }
