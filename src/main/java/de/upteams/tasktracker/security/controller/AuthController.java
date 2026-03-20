@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RestController;
 
 import static de.upteams.tasktracker.security.constants.Constants.ACCESS_TOKEN_COOKIE;
@@ -38,12 +39,12 @@ public class AuthController implements AuthApi {
     }
 
     @Override
-    public TokenResponseDto refreshAccessToken(RefreshRequestDto request, HttpServletResponse response) {
-        final String newAccessToken = service.refreshAccessToken(request.getRefreshToken());
-        final Cookie accessCookie = new Cookie(ACCESS_TOKEN_COOKIE, newAccessToken);
+    public TokenResponseDto refreshAccessToken(@CookieValue("Refresh-Token") String refreshToken, HttpServletResponse response) {
+        final String newAccessToken = service.refreshAccessToken(refreshToken);
+        final Cookie accessCookie = cookieService.generateAccessTokenCookie(newAccessToken);
 
         response.addCookie(accessCookie);
-        return new TokenResponseDto(newAccessToken, request.getRefreshToken());
+        return new TokenResponseDto(newAccessToken, refreshToken);
     }
 
     @Override

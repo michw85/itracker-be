@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,12 +87,7 @@ public interface AuthApi {
     })
     @PostMapping("/refresh-token")
     TokenResponseDto refreshAccessToken(
-            @RequestBody
-            @io.swagger.v3.oas.annotations.parameters.RequestBody(
-                    required = true,
-                    description = "Request that contains refresh token"
-            )
-            RefreshRequestDto request,
+            @CookieValue("Refresh-Token") String refreshToken,
             HttpServletResponse response
     );
 
