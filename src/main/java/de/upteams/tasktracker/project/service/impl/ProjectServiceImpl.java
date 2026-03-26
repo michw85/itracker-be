@@ -1,8 +1,10 @@
 package de.upteams.tasktracker.project.service.impl;
 
+import de.upteams.tasktracker.collaborator.entity.Collaborator;
 import de.upteams.tasktracker.collaborator.entity.ProjectRoles;
 import de.upteams.tasktracker.collaborator.persistence.CollaboratorRepository;
 import de.upteams.tasktracker.collaborator.service.interfaces.CollaboratorService;
+import de.upteams.tasktracker.exception.handling.exceptions.common.RestApiException;
 import de.upteams.tasktracker.project.dto.request.ProjectCreateDto;
 import de.upteams.tasktracker.project.dto.response.ProjectResponseDto;
 import de.upteams.tasktracker.project.dto.response.ProjectSummaryDto;
@@ -14,15 +16,13 @@ import de.upteams.tasktracker.project.utils.ProjectMapper;
 import de.upteams.tasktracker.task.entity.TaskStatus;
 import de.upteams.tasktracker.task.persistence.TaskRepository;
 import de.upteams.tasktracker.user.entity.AppUser;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -41,9 +41,23 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public ProjectResponseDto save(ProjectCreateDto newProjectDto, AppUser projectOwner) {
+        log.info("Creating new project by user: {}", projectOwner.getEmail());
+
         Project project = projectMapper.mapDtoToEntity(newProjectDto);
         project.setOwner(projectOwner);
-        return projectMapper.toResponseDto(repository.save(project));
+
+        Project savedProject = repository.save(project);
+        log.info("Project saved with ID: {}", savedProject.getId());
+
+        // Adding the creator as an OWNER in Collaborator
+        try {
+            Collaborator collaborator = collaboratorService.addCollaborator(savedProject, projectOwner, ProjectRoles.OWNER);
+            log.info("Added collaborator with role OWNER for user: {}", projectOwner.getEmail());
+        } catch (Exception e) {
+            log.error("Failed to add collaborator: {}", e.getMessage());
+        }
+
+        return projectMapper.toResponseDto(savedProject);
     }
 
     @Override
@@ -154,5 +168,54 @@ public class ProjectServiceImpl implements ProjectService {
                 .executorsCount(executorsCount)
                 .status("OPEN")
                 .build();
+    }
+
+    @Override
+    @Transactional
+    public ProjectResponseDto update(String id, ProjectCreateDto updateDto, AppUser user) {
+        Project project = getOrTrow(id);
+
+        log.info("User {} trying to update project {} with title: {}",
+                user.getEmail(), id, updateDto.title());
+
+        // Получаем роль пользователя в проекте
+        Optional<ProjectRoles> userRoleOpt = collaboratorService.getUserRoleInProject(
+                UUID.fromString(id), user.getId());
+
+        log.info("User role in project: {}", userRoleOpt);
+
+        // Проверяем, является ли пользователь владельцем проекта
+        boolean isOwner = project.getOwner() != null &&
+                project.getOwner().getId().equals(user.getId());
+
+        log.info("Is user project owner: {}", isOwner);
+
+        // Проверка прав: OWNER или ADMIN могут редактировать
+        boolean hasPermission = false;
+
+        if (isOwner) {
+            hasPermission = true;
+            log.info("User is project owner, granting edit permission");
+        } else if (userRoleOpt.isPresent()) {
+            ProjectRoles role = userRoleOpt.get();
+            hasPermission = role == ProjectRoles.OWNER || role == ProjectRoles.ADMIN;
+            log.info("User role is {}, has edit permission: {}", role, hasPermission);
+        }
+
+        if (!hasPermission) {
+            log.warn("User {} does NOT have permission to edit project {}", user.getEmail(), id);
+            throw new RestApiException(HttpStatus.FORBIDDEN,
+                    "You don't have permission to edit this project");
+        }
+
+        log.info("User {} has permission to edit project {}", user.getEmail(), id);
+
+        project.setTitle(updateDto.title());
+        project.setDescription(updateDto.description());
+
+        Project savedProject = repository.save(project);
+        log.info("Project {} updated successfully", id);
+
+        return projectMapper.toResponseDto(savedProject);
     }
 }

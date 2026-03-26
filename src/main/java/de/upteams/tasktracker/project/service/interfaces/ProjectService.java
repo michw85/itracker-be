@@ -33,4 +33,6 @@ public interface ProjectService {
     List<Project> getUserProjects(AppUser user);
 
     List<ProjectSummaryDto> getProjectSummaries(AppUser user);
+
+    ProjectResponseDto update(String id, ProjectCreateDto updateDto, AppUser user);
 }

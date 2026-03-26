@@ -83,7 +83,7 @@ public class ProjectMemberController {
     /**
      * 2. Get project information
      */
-    @GetMapping("/{projectId}")
+    @GetMapping("/{projectId}/info")
     @PreAuthorize("isAuthenticated()")
     @Operation(summary = "Get project information")
     public ResponseEntity<Project> getProjectInfo(

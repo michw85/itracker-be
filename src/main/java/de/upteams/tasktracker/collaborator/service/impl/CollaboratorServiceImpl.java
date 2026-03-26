@@ -62,9 +62,14 @@ public class CollaboratorServiceImpl implements CollaboratorService {
 
     @Override
     public Collaborator addCollaborator(Project project, AppUser user, ProjectRoles role) {
-        // Checking if the user is already a collaborator
+        log.info("Adding collaborator: user={}, project={}, role={}",
+                user.getEmail(), project.getId(), role);
+
+        // We're checking to see if the collaborator already exists.
         Optional<Collaborator> existing = getCollaborator(user, project);
         if (existing.isPresent()) {
+            log.info("Collaborator already exists for user {} in project {}",
+                    user.getEmail(), project.getId());
             return existing.get();
         }
 
@@ -74,7 +79,11 @@ public class CollaboratorServiceImpl implements CollaboratorService {
         collaborator.setProject(project);
         collaborator.getProjectRolesSet().add(role);
 
-        return collaboratorRepository.save(collaborator);
+        Collaborator saved = collaboratorRepository.save(collaborator);
+        log.info("Created collaborator with ID {} for user {} in project {}",
+                saved.getId(), user.getEmail(), project.getId());
+
+        return saved;
     }
 
     @Override
