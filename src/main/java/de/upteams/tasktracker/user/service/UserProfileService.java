@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import de.upteams.tasktracker.files.uploading.CloudinaryService;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +27,7 @@ public class UserProfileService {
     private final AppUserMapper userMapper;
     private final FileService fileService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final CloudinaryService cloudinaryService;
 
     @Transactional(readOnly = true)
     public UserResponseDto getUserProfile(String userId) {
@@ -61,6 +62,29 @@ public class UserProfileService {
     }
 
     @Transactional
+    public UserResponseDto uploadAvatar(String userId, MultipartFile file) {
+
+        AppUser user = userService.getByIdOrThrow(userId);
+
+        try {
+            // ✅ Cloudinary Upload
+            String avatarUrl = cloudinaryService.upload(file);
+
+            // ✅ Save DB
+            user.updateAvatar(avatarUrl);
+            userService.saveOrUpdate(user);
+
+            log.info("Avatar uploaded successfully for user {}", userId);
+
+        } catch (RuntimeException e) {
+            log.error("Failed to upload avatar for user {}", userId, e);
+            throw new RuntimeException("Failed to upload avatar", e);
+        }
+
+        return userMapper.mapEntityToDto(user);
+    }
+
+   /* @Transactional
     public UserResponseDto uploadAvatar(String userId, MultipartFile file) {
         AppUser user = userService.getByIdOrThrow(userId);
 
@@ -99,7 +123,7 @@ public class UserProfileService {
         }
 
         return userMapper.mapEntityToDto(user);
-    }
+    }*/
 
     @Transactional
     public UserResponseDto deleteAvatar(String userId) {

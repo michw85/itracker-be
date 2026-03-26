@@ -48,8 +48,10 @@ dependencies {
     // JAXB API для JJWT (из-за удаления в Java 9+)
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.2'
 
-
+    // DigitalOcean
     implementation 'software.amazon.awssdk:s3:2.31.28'
+    // Cloudinary- Avatar foto upload
+    implementation 'com.cloudinary:cloudinary-http44:1.39.0'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
